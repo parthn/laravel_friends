@@ -72,9 +72,23 @@ class UserController extends Controller
                         });                     
                     })    
                     ->orderBy($filter['order'][0]['column'], $filter['order'][0]['dir'])
-                    ->where('id', '!=', Auth::user()->id)
-                    ->count();
-            $data['data'] = User::skip($filter['start'])
+                    ->where('id', '!=', Auth::user()->id);
+                    if(!empty($filter['search_user'])){
+                        $data['recordsFiltered'] = $data['recordsFiltered']->where(function($q) use ($filter){
+                            $q->orWhere('first_name', 'LIKE', '%' . $filter['search_user'] . '%')
+                            ->orWhere('last_name', 'LIKE', '%' . $filter['search_user'] . '%')
+                            ->orWhere('email', 'LIKE', '%' . $filter['search_user'] . '%')
+                            ->orWhere('phone_no', 'LIKE', '%' . $filter['search_user'] . '%');                
+                        });   
+                    }
+                    if(!empty($filter['search_user_skill'])){
+                        $data['recordsFiltered'] = $data['recordsFiltered']->whereHas('user_skills', function ($que) use ($filter){
+                            $que->where('skill_name', 'LIKE', '%' . $filter['search_user_skill'] . '%');
+                        });     
+                    }
+                    $data['recordsFiltered'] = $data['recordsFiltered']->count();
+
+                    $data['data'] = User::skip($filter['start'])
                     ->take($filter['length'])
                     ->with(['user_skills','friend_requests_nosent'])
                     ->where(function($q) use ($filter){
@@ -85,8 +99,21 @@ class UserController extends Controller
                         ->whereHas('user_skills', function ($que) use ($filter){
                             $que->where('skill_name', 'LIKE', '%' . $filter['search']['value'] . '%');
                         });                     
-                    })                    
-                    ->orderBy($filter['order'][0]['column'], $filter['order'][0]['dir'])
+                    });        
+                    if(!empty($filter['search_user'])){
+                        $data['data'] = $data['data']->where(function($q) use ($filter){
+                            $q->orWhere('first_name', 'LIKE', '%' . $filter['search_user'] . '%')
+                            ->orWhere('last_name', 'LIKE', '%' . $filter['search_user'] . '%')
+                            ->orWhere('email', 'LIKE', '%' . $filter['search_user'] . '%')
+                            ->orWhere('phone_no', 'LIKE', '%' . $filter['search_user'] . '%');                
+                        });   
+                    }
+                    if(!empty($filter['search_user_skill'])){
+                        $data['data'] = $data['data']->whereHas('user_skills', function ($que) use ($filter){
+                            $que->where('skill_name', 'LIKE', '%' . $filter['search_user_skill'] . '%');
+                        });     
+                    }            
+                    $data['data'] = $data['data']->orderBy($filter['order'][0]['column'], $filter['order'][0]['dir'])
                     ->where('id', '!=', Auth::user()->id)
                     ->get();
                     

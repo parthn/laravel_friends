@@ -7,8 +7,8 @@
             <div class="card">
                 <div class="card-header">Dashboard</div>
                 <div class="card-body">
-                <input type="text" name="search_user" id="search_user">
-                <input type="text" name="search_user_skill" id="search_user_skill">
+                <input type="text" placeholder="search" name="search_user" id="search_user">
+                <input type="text"  placeholder="skill search" name="search_user_skill" id="search_user_skill">
                 <div class="container padding">
                     <table class="table table-bordered table-striped" id="user_datatable">
                         <thead class="thead-dark">
