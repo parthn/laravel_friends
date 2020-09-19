@@ -31,7 +31,7 @@ class HomeController extends Controller
     public function index()
     {   $user_id= Auth::user()->id;
         $data = User_friends::with(['user'])           
-        ->where('user_id', '=', $user_id)
+        ->where('friend_id', '=', $user_id)
         ->where('status', '=', 'pending')
         ->get();
         return view('home', compact('data'));
