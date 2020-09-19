@@ -83,7 +83,12 @@
                 {data: 'last_name', name: 'last_name'},
                 {data: 'email', name: 'email'},
                 {render: function (data, type, row) {
+                    if(row.friend_requests_nosent){
                         return '<button class="btn btn-primary" onclick="SendRequest(' + row.id + ')">Send Request</button>';
+                    }else{
+                        return 'Already Sent';
+                    }
+                       
                     }, "orderable": false
                 }
             ],
