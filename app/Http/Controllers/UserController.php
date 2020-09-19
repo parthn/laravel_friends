@@ -70,10 +70,7 @@ class UserController extends Controller
                         ->whereHas('user_skills', function ($que) use ($filter){
                             $que->where('skill_name', 'LIKE', '%' . $filter['search']['value'] . '%');
                         });                     
-                    }) 
-                    ->whereHas('friend_requests_nosent', function ($que) use ($user_id){
-                        $que->where('user_id','=', $user_id);
-                     })    
+                    })    
                     ->orderBy($filter['order'][0]['column'], $filter['order'][0]['dir'])
                     ->where('id', '!=', Auth::user()->id)
                     ->count();
@@ -88,10 +85,7 @@ class UserController extends Controller
                         ->whereHas('user_skills', function ($que) use ($filter){
                             $que->where('skill_name', 'LIKE', '%' . $filter['search']['value'] . '%');
                         });                     
-                    })    
-                    ->whereHas('friend_requests_nosent', function ($que) use ($user_id){
-                        $que->where('user_id','=', $user_id);
-                     })                 
+                    })                    
                     ->orderBy($filter['order'][0]['column'], $filter['order'][0]['dir'])
                     ->where('id', '!=', Auth::user()->id)
                     ->get();
