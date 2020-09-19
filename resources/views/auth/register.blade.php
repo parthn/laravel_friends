@@ -116,41 +116,41 @@
 </div>
 <script>
  $(document).ready(function () {
-        // $("form[name='register_form']").validate({
-        //     rules: {
-        //         'first_name': {required: true},  
-        //         'last_name': {required: true},  
-        //         'email': {required: true, email: true},  
-        //         'phone_no': {required: true, minlength: 11},  
-        //         'skill_name[]': {required: true},  
-        //         'password': {required: true, minlength: 5},  
-        //         'password_confirmation': {required: true, equalTo: "#password"},  
-        //     },
-        //     messages: {
-        //         'first_name': "Please enter First Name",
-        //         'last_name': "Please enter Last Name",
-        //         'skill_name[]': "Please enter Skill Name",
-        //         'email': {
-        //             required: "Please enter a email",
-        //             email: "Please enter a valid email address"
-        //         },
-        //         'phone_no': {
-        //             required: "Please enter a phone no",
-        //             minlength: "Your phone no is not valid"
-        //         },
-        //         'password': {
-        //             required: "Please enter a password",
-        //             minlength: "Your password must be at least 5 characters long"
-        //         },
-        //         'password_confirmation': {
-        //             required: "Please enter a Confirm password",
-        //             equalTo: "Enter Confirm Password Same as Password"
-        //         },
-        //     },
-        //     submitHandler: function(form) {
-        //      form.submit();
-        //     }
-        // });
+        $("form[name='register_form']").validate({
+            rules: {
+                'first_name': {required: true},  
+                'last_name': {required: true},  
+                'email': {required: true, email: true},  
+                'phone_no': {required: true, minlength: 11},  
+                'skill_name[]': {required: true},  
+                'password': {required: true, minlength: 5},  
+                'password_confirmation': {required: true, equalTo: "#password"},  
+            },
+            messages: {
+                'first_name': "Please enter First Name",
+                'last_name': "Please enter Last Name",
+                'skill_name[]': "Please enter Skill Name",
+                'email': {
+                    required: "Please enter a email",
+                    email: "Please enter a valid email address"
+                },
+                'phone_no': {
+                    required: "Please enter a phone no",
+                    minlength: "Your phone no is not valid"
+                },
+                'password': {
+                    required: "Please enter a password",
+                    minlength: "Your password must be at least 5 characters long"
+                },
+                'password_confirmation': {
+                    required: "Please enter a Confirm password",
+                    equalTo: "Enter Confirm Password Same as Password"
+                },
+            },
+            submitHandler: function(form) {
+             form.submit();
+            }
+        });
 
 
         $(".add").click(function(){
