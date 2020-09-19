@@ -44,10 +44,10 @@
                 });
             },
             columns: [
-                {data: 'id', name: 'id'},
-                {data: 'first_name', name: 'first_name'},
-                {data: 'last_name', name: 'last_name'},
-                {data: 'email', name: 'email'}
+                {data: 'friend.id', name: 'id'},
+                {data: 'friend.first_name', name: 'first_name'},
+                {data: 'friend.last_name', name: 'last_name'},
+                {data: 'friend.email', name: 'email'}
             ],
             order: [[0, 'desc']]
         });

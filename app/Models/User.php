@@ -44,9 +44,13 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\User_skills', 'user_id', 'id');
     }
 
-    public function friend_requests_nosent()
+    public function friend_requests_friend()
     {
         return $this->hasOne('App\Models\User_friends', 'friend_id', 'id');
+    }
+    public function friend_requests_user()
+    {
+        return $this->hasOne('App\Models\User_friends', 'user_id', 'id');
     }
    
     public function friend_requests_pending()

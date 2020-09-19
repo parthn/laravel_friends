@@ -83,7 +83,7 @@
                 {data: 'last_name', name: 'last_name'},
                 {data: 'email', name: 'email'},
                 {render: function (data, type, row) {
-                    if(row.friend_requests_nosent){
+                    if(row.friend_requests_friend || row.friend_requests_user){
                         return 'Already Sent';
                     }else{
                         return '<button class="btn btn-primary" onclick="SendRequest(' + row.id + ')">Send Request</button>';

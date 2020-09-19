@@ -59,9 +59,10 @@ class UserController extends Controller
         {
         //   dd(Auth::user()->id);
             $user_id= Auth::user()->id;
+            
             $data['recordsTotal'] = User::where('id', '!=', Auth::user()->id)->count();
             
-            $data['recordsFiltered'] = User::with(['user_skills','friend_requests_nosent'])
+            $data['recordsFiltered'] = User::with(['user_skills','friend_requests_friend','friend_requests_user'])
                     ->where(function($q) use ($filter){
                         $q->orWhere('first_name', 'LIKE', '%' . $filter['search']['value'] . '%')
                         ->orWhere('last_name', 'LIKE', '%' . $filter['search']['value'] . '%')
@@ -90,7 +91,7 @@ class UserController extends Controller
 
                     $data['data'] = User::skip($filter['start'])
                     ->take($filter['length'])
-                    ->with(['user_skills','friend_requests_nosent'])
+                    ->with(['user_skills','friend_requests_friend','friend_requests_user'])
                     ->where(function($q) use ($filter){
                         $q->orWhere('first_name', 'LIKE', '%' . $filter['search']['value'] . '%')
                         ->orWhere('last_name', 'LIKE', '%' . $filter['search']['value'] . '%')
@@ -116,8 +117,6 @@ class UserController extends Controller
                     $data['data'] = $data['data']->orderBy($filter['order'][0]['column'], $filter['order'][0]['dir'])
                     ->where('id', '!=', Auth::user()->id)
                     ->get();
-                    
-    
             return response()->json($data, 200);
         } else
         {
@@ -190,42 +189,18 @@ class UserController extends Controller
         $filter = $request->all();
       
         if (!empty($filter))
-        { $user_id= Auth::user()->id;
-            $data['recordsTotal'] = User::where('id', '!=', Auth::user()->id)->count();
-            
-            $data['recordsFiltered'] = User::with(['user_skills','friend_requests_confirmed'])
-                        ->where(function($q) use ($filter){
-                            $q->orWhere('first_name', 'LIKE', '%' . $filter['search']['value'] . '%')
-                            ->orWhere('last_name', 'LIKE', '%' . $filter['search']['value'] . '%')
-                            ->orWhere('email', 'LIKE', '%' . $filter['search']['value'] . '%')
-                            ->orWhere('phone_no', 'LIKE', '%' . $filter['search']['value'] . '%')                        
-                            ->whereHas('user_skills', function ($que) use ($filter){
-                                $que->where('skill_name', 'LIKE', '%' . $filter['search']['value'] . '%');
-                            });                     
-                        }) 
-                     ->whereHas('friend_requests_confirmed', function ($que) use ($user_id){
-                        $que->where('user_id', $user_id);
-                     })   
-                    ->orderBy($filter['order'][0]['column'], $filter['order'][0]['dir'])
-                    ->where('id', '!=', Auth::user()->id)
+        {  $user_id= Auth::user()->id;
+            $data['recordsTotal'] = User_friends::where('user_id', '!=', Auth::user()->id)->where('status', '=', 'confirmed')->count();
+
+            $data['recordsFiltered'] = User_friends::with(['friend'])
+                    ->where('user_id', '=', Auth::user()->id)
+                    ->where('status', '=', 'confirmed')
                     ->count();
-            $data['data'] = User::skip($filter['start'])
+            $data['data'] = User_friends::skip($filter['start'])
                     ->take($filter['length'])
-                    ->with(['user_skills','friend_requests_confirmed'])
-                    ->where(function($q) use ($filter){
-                        $q->orWhere('first_name', 'LIKE', '%' . $filter['search']['value'] . '%')
-                        ->orWhere('last_name', 'LIKE', '%' . $filter['search']['value'] . '%')
-                        ->orWhere('email', 'LIKE', '%' . $filter['search']['value'] . '%')
-                        ->orWhere('phone_no', 'LIKE', '%' . $filter['search']['value'] . '%')                        
-                        ->whereHas('user_skills', function ($que) use ($filter){
-                            $que->where('skill_name', 'LIKE', '%' . $filter['search']['value'] . '%');
-                        });                     
-                    })   
-                    ->whereHas('friend_requests_confirmed', function ($que) use ($user_id){
-                        $que->where('user_id', $user_id);
-                     })                 
-                    ->orderBy($filter['order'][0]['column'], $filter['order'][0]['dir'])
-                    ->where('id', '!=', Auth::user()->id)
+                    ->with(['friend'])              
+                    ->where('user_id', '=', Auth::user()->id)
+                    ->where('status', '=', 'confirmed')
                     ->get()->toArray();
     
             return response()->json($data, 200);
