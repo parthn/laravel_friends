@@ -30,11 +30,9 @@ class HomeController extends Controller
      */
     public function index()
     {   $user_id= Auth::user()->id;
-        $data = User::with(['user_skills','friend_requests_pending'])
-        ->whereHas('friend_requests_pending', function ($que) use ($user_id){
-            $que->where('user_id','=', $user_id);
-         })                 
-        ->where('id', '!=', Auth::user()->id)
+        $data = User_friends::with(['user'])           
+        ->where('user_id', '=', $user_id)
+        ->where('status', '=', 'pending')
         ->get();
         return view('home', compact('data'));
     }

@@ -39,9 +39,9 @@
                             </tr>
                             @foreach($data as $da)
                             <tr>
-                                <td>{{$da->first_name}}</td>
-                                <td>{{$da->last_name}}</td>
-                                <td>{{$da->email}}</td>
+                                <td>{{$da->user->first_name}}</td>
+                                <td>{{$da->user->last_name}}</td>
+                                <td>{{$da->user->email}}</td>
                                 <td><button class="btn btn-primary" onclick="AcceptRequest({{$da->id}})">Accept Request</button>
                                     <button class="btn btn-primary" onclick="rejectRequest({{$da->id}})">Reject Request</button></td>
                             </tr>
@@ -104,7 +104,8 @@
                 dataType: 'json',
                 success: function (data) {
                     var oTable = $('#user_datatable').dataTable();
-                    oTable.fnDraw(false);       
+                    oTable.fnDraw(false);    
+                    location.reload();   
                 },
                 error: function (error) {
                     console.log(error);
@@ -113,7 +114,7 @@
         }
     }
     function AcceptRequest(request_id) {
-        if (user_id) {
+        if (request_id) {
             $.ajax({
                 url: SITEURL + "/accept_request/"+request_id,
                 type: "get",
@@ -121,6 +122,7 @@
                 success: function (data) {
                     var oTable = $('#user_datatable').dataTable();
                     oTable.fnDraw(false);       
+                    location.reload();
                 },
                 error: function (error) {
                     console.log(error);
@@ -129,7 +131,7 @@
         }
     }
     function rejectRequest(request_id) {
-        if (user_id) {
+        if (request_id) {
             $.ajax({
                 url: SITEURL + "/reject_request/"+request_id,
                 type: "get",

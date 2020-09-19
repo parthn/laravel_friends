@@ -17,4 +17,9 @@ class User_friends extends Model
     protected $fillable = [
         'user_id', 'friend_id', 'status',
     ];
+
+    public function user()
+    {
+        return $this->hasOne('App\Models\User', 'id', 'user_id');
+    }
 }
