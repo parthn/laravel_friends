@@ -20,6 +20,6 @@ class User_friends extends Model
 
     public function user()
     {
-        return $this->hasOne('App\Models\User', 'id', 'user_id');
+        return $this->hasOne('App\Models\User', 'id', 'friend_id');
     }
 }
