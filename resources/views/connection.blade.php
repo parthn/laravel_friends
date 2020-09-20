@@ -11,7 +11,6 @@
                     <table class="table table-bordered table-striped" id="user_datatable">
                         <thead class="thead-dark">
                             <tr>
-                                <th>ID</th>
                                 <th>First Name</th>
                                 <th>Last Name</th>
                                 <th>Email</th>
@@ -28,6 +27,7 @@
 
 <script>
        var SITEURL = '{{URL::to('')}}';
+       var user_id = '{{AUTH::User()->id}}';
        $(document).ready(function () {
         $('#user_datatable').DataTable({
             processing: true,
@@ -44,10 +44,30 @@
                 });
             },
             columns: [
-                {data: 'friend.id', name: 'id'},
-                {data: 'friend.first_name', name: 'first_name'},
-                {data: 'friend.last_name', name: 'last_name'},
-                {data: 'friend.email', name: 'email'}
+                {render: function (data, type, row) {
+                    if(row.friend.id != user_id){
+                        return row.friend.first_name;
+                    }else  if(row.user.id != user_id){
+                        return row.user.first_name;
+                    }
+                  }
+                },
+                {render: function (data, type, row) {
+                    if(row.friend.id != user_id){
+                        return row.friend.last_name;
+                    }else  if(row.user.id != user_id){
+                        return row.user.last_name;
+                    }
+                  }
+                },
+                {render: function (data, type, row) {
+                    if(row.friend.id != user_id){
+                        return row.friend.email;
+                    }else  if(row.user.id != user_id){
+                        return row.user.email;
+                    }
+                  }
+                }
             ],
             order: [[0, 'desc']]
         });

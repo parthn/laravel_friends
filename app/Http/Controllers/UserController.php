@@ -72,6 +72,8 @@ class UserController extends Controller
                             $que->where('skill_name', 'LIKE', '%' . $filter['search']['value'] . '%');
                         });                     
                     })    
+                    ->has('friend_requests_friend', 0)
+                    ->has('friend_requests_user', 0)
                     ->orderBy($filter['order'][0]['column'], $filter['order'][0]['dir'])
                     ->where('id', '!=', Auth::user()->id);
                     if(!empty($filter['search_user'])){
@@ -100,7 +102,9 @@ class UserController extends Controller
                         ->whereHas('user_skills', function ($que) use ($filter){
                             $que->where('skill_name', 'LIKE', '%' . $filter['search']['value'] . '%');
                         });                     
-                    });        
+                    });               
+                    $data['data'] = $data['data']->has('friend_requests_friend', 0)
+                    ->has('friend_requests_user', 0);        
                     if(!empty($filter['search_user'])){
                         $data['data'] = $data['data']->where(function($q) use ($filter){
                             $q->orWhere('first_name', 'LIKE', '%' . $filter['search_user'] . '%')
@@ -192,16 +196,22 @@ class UserController extends Controller
         {  $user_id= Auth::user()->id;
             $data['recordsTotal'] = User_friends::where('user_id', '!=', Auth::user()->id)->where('status', '=', 'confirmed')->count();
 
-            $data['recordsFiltered'] = User_friends::with(['friend'])
-                    ->where('user_id', '=', Auth::user()->id)
+            $data['recordsFiltered'] = User_friends::with(['friend','user'])
+                    ->where(function($q) use ($filter){
+                        $q->orwhere('user_id', '=', Auth::user()->id)
+                        ->orwhere('friend_id', '=', Auth::user()->id);
+                    }) 
                     ->where('status', '=', 'confirmed')
                     ->count();
             $data['data'] = User_friends::skip($filter['start'])
                     ->take($filter['length'])
-                    ->with(['friend'])              
-                    ->where('user_id', '=', Auth::user()->id)
-                    ->where('status', '=', 'confirmed')
-                    ->get()->toArray();
+                    ->with(['friend','user'])  
+                    ->where('status', '=', 'confirmed')            
+                    ->where(function($q) use ($filter){
+                        $q->orwhere('user_id', '=', Auth::user()->id)
+                        ->orwhere('friend_id', '=', Auth::user()->id);                   
+                    }) 
+                    ->get();
     
             return response()->json($data, 200);
         }

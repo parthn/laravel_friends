@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Auth;
 
 class User extends Authenticatable
 {
@@ -46,11 +47,11 @@ class User extends Authenticatable
 
     public function friend_requests_friend()
     {
-        return $this->hasOne('App\Models\User_friends', 'friend_id', 'id');
+        return $this->hasOne('App\Models\User_friends', 'friend_id', 'id')->where('user_id', Auth::user()->id);
     }
     public function friend_requests_user()
     {
-        return $this->hasOne('App\Models\User_friends', 'user_id', 'id');
+        return $this->hasOne('App\Models\User_friends', 'user_id', 'id')->where('friend_id', Auth::user()->id);
     }
    
     public function friend_requests_pending()
@@ -60,6 +61,11 @@ class User extends Authenticatable
 
     public function friend_requests_confirmed()
     {
-        return $this->hasOne('App\Models\User_friends', 'friend_id', 'id')->where('status', 'confirmed');
+        return $this->hasOne('App\Models\User_friends', 'friend_id', 'id')->where('status', 'confirmed')->where('user_id', Auth::user()->id);;
+    }
+  
+    public function friend_requests_user_confirm()
+    {
+        return $this->hasOne('App\Models\User_friends', 'user_id', 'id')->where('status', 'confirmed')->where('friend_id', Auth::user()->id);;
     }
 }
